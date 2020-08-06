@@ -54,8 +54,8 @@ ReactDOM.render(
     <ReactNotification />
     <div style={{minHeight:"70vh", paddingBottom:"30px"}}>
         <Switch>
-
-            <Route path="/LHC/dashboard" render={props => <Dashboard {...props} /> } />
+            <Route path="/LHC/dashboard" render={props => <AcadsHandler {...props} />} />
+            <Route path="/dashboard" render={props => <Dashboard {...props} /> } /> 
             <Route path="/login" render={props => <Login {...props} /> } />
             <Route path="/student" render={props => <Student {...props} /> } />
 
@@ -69,7 +69,7 @@ ReactDOM.render(
             <Route path="/booking/timeline" render={props => <TimeLine {...props} /> } /> */}
 
             <Route path="/channeli/oauth" render={props => <ChanneliHandler {...props} />} />
-            <Route path="/acads/oauth" render={props => <AcadsHandler {...props} />} />
+            
             {/* <Route path="/admin1/home" render={props => <Home {...props} /> } />
             <Route path="/admin1/venue-page" render={props => <Venue {...props} /> } />
             <Route path="/admin1/room-page" render={props => <RoomPage2 {...props} /> } />
@@ -84,8 +84,8 @@ ReactDOM.render(
             
             {/* <Route path="/admin2/home" render={props => <Home2 {...props} /> } /> */}
 
-            <Redirect to="/LHC/dashboard?q=1" />
-            <Redirect from="/" to="/LHC/dashboard?q=1" />
+            <Redirect to="/dashboard?q=1" />
+            <Redirect from="/" to="/dashboard?q=1" />
         </Switch>
     </div>
     <MainFooter />

@@ -131,20 +131,22 @@ export function getUserData(req,res, next){
 
 export function getFacultyData(req,res, next){
 
-  var token = req.headers.authorization;
-  console.log("headers token is: " + token);
+  // var token = req.headers.authorization;
+  // console.log("headers token is: " + token);
+  console.log(`http://10.22.0.73/api/v_IMGPersonalInfoFC/${req.query.e}`)
 
   axios
     .get(`http://10.22.0.73/api/v_IMGPersonalInfoFC/${req.query.e}`, {
       headers: {
         token: "qazmlp1010",
-      },
+      }
     })
     .then((response) => {
       console.log("view-member = ");
+      console.log(response.data)      // DATA AAGYA H, CHECK BACKEND TERMINAL
       
-      const employeeID = toString(response.data.EmployeeNo);
-      // console.log(userId)
+      const employeeID = response.data.EmployeeNo;
+      console.log(employeeID)
 
       User.findOne({username: employeeID}, (err, resp) => {
         if(err){
@@ -154,19 +156,22 @@ export function getFacultyData(req,res, next){
                 errorMessage : errorMessage
             })
         }
-
+        console.log("resp is ")
+        console.log(resp);
         if(resp===null){
+          console.log("resp is null and user is-")
           const user  = new User({
-              userId: response.data.employeeID ,
-              username: response.data.employeeID,
+              // userId: response.data.employeeID ,
+              username: employeeID,
               person: {
                       shortName:'',
                       fullName:response.data.Name,
                       roles: {
                         role: response.data.Designation!==null ? 'facultyMember':'student',
-                        activeStatus:''
+                        activeStatus:'Active'
                       },
-              displayPicture:response.data.FcPic 
+                      // displayPicture:response.data.FcPic 
+                      displayPicture: null
               },
               student: {                                              //DISCUSS THIS!!
                 startDate: response.data.StartSession,
@@ -186,15 +191,18 @@ export function getFacultyData(req,res, next){
                   primaryPhoneNumber: response.data.ContactNo
               },
              
-              role:response.data.role,
+              role:response.data.Designation!==null ? 'facultyMember':'student',
               history:[]
           })
-           if(!((response.data.Designation) === null)){
-              user.role =  'facultyMember'
-          }
-          else
-            user.role = 'student'
-          // console.log(user)
+          //  if(!((response.data.Designation) === null)){
+          //     user.role =  'facultyMember'
+          // }
+          // else
+          //   user.role = 'student'
+
+          console.log("user is ");
+          console.log(user)
+
           user.save((err, user)=>{
               if(err){
                   let errorMessage = DbErrorHandler(err)
@@ -207,21 +215,25 @@ export function getFacultyData(req,res, next){
               console.log("User saved to DB!")
               console.log(user)
               //check for string or number
-              let payload = {employeeID:user.employeeID}
+
+              // const {_id, person , email,role, type} = user
+              let payload = {userId:user.userId}
               let  token  =  generateToken(payload)
               res.cookie('t',token,{maxAge:9999})
 
               // const {_id, person , email,role, type} = user
-              const _id = user.EmployeeNo;
-              const userId = user.EmployeeNo;
-              const fullName = user.Name;
-              const contact = user.ContactNo;
-              const email = user.IITREmailID;
+              const _id = user._id;
+              const userId = user.userId
+              const fullName = user.person.fullName;
+              const contact = user.contactInformation.primaryPhoneNumber;
+              const email = user.contactInformation.instituteWebmailAddress;
               const role = user.role;
+
 
               return res.send({token:token, user :{_id,userId,fullName,contact,email,role}})
           })
-        }else{
+        }
+        else{
             console.log("User is there in DB!")
             console.log(resp)
 
@@ -229,20 +241,20 @@ export function getFacultyData(req,res, next){
             let  tok  =  generateToken(payload)
             res.cookie('t',tok,{maxAge:9999})
             // const {_id, person , email,role, type} = user
-            const _id = resp.EmployeeNo;
-            const userId = resp.EmployeeNo;
-            const fullName = resp.Name;
-            const contact = resp.ContactNo;
-            const email = resp.IITREmailID;
+            const _id = resp._id;
+            const username = resp.username;
+            const fullName = resp.person.fullName;
+            const contact = resp.contactInformation.primaryPhoneNumber;
+            const email = resp.contactInformation.instituteWebmailAddress;
             const role = resp.role;
 
             // console.log("TOKEN IS -");
             // console.log(tok)
 
-            return res.send({token:tok, user :{_id,userId,fullName,contact,email,role}})
+            return res.send({token:tok, user :{_id,username,fullName,contact,email,role}})
         }  
       })
 
     })
-    .catch((e) => res.status(500).send("Error: " + e));
+    .catch((e) => console.log(e));
 }

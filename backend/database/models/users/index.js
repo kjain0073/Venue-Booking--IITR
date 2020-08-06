@@ -71,10 +71,10 @@ const contactSchema = new Schema({
 })
 
 const User = new Schema({
-    userId:{
-        type: Number,
-        required: true
-    },
+    // userId:{
+    //     type: Number,
+    //     required: true
+    // },
     username:{
         type: String,
         required: true

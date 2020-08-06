@@ -22,54 +22,83 @@ class AcadsHandler extends Component {
 
       getFacultyUserData = async() => {
         var dataReceived;
-        
-        await axios.get(`http://${window.location.hostname}:4005/acads/getData`,
-            {
-                'headers': {
-                    'token': `qazmlp1010`
-                }
-            }
-        ).then((response) => {
-            console.log("view-member = ");
-            console.log(response.data);
-            
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('user', JSON.stringify(response.data.user))
-            localStorage.setItem('isSignedIn', true)
-
-            this.setState({userType: response.data.user.role})
-            console.log(this.state.userType)
-            if(this.state.userType === 'student'){
-                window.location.href = '/student'
-            }else if(this.state.userType ==='facultyMember'){
-                window.location.href = '/'
-            }else{
-                alert('You cannot login using this');
-                window.location.href='/login-page'
-            }
-          })
-          .catch((e) => console.log(e));
-
-      }
-
-      componentDidMount(){
-
         const params = new URLSearchParams(window.location.search)
         const e = params.getAll('e')[0];
-
-        if(params.getAll('e')[0]){
-
-            axios.post(`http://10.22.0.73/api/v_IMGPersonalInfoFC/100384/${e}`)
-            .then((response) => {
+          await axios.get(`http://${window.location.hostname}:4005/acads/getData?e=${e}`
+            // ,
+                // {
+                //     'headers': {
+                //         'token': `qazmlp1010`
+                //     }
+                // }
+            ).then((response) => {
+                console.log(" view-member = ");
                 console.log(response.data);
-                this.getUserData();
                 
+                localStorage.setItem('token', response.data.token);
+                localStorage.setItem('user', JSON.stringify(response.data.user));
+                
+                localStorage.setItem('isSignedIn', true)
+
+                this.setState({userType: response.data.user.role})
+                console.log(this.state.userType)
+                if(this.state.userType === 'student'){
+                    window.location.href = '/student'
+                }else if(this.state.userType ==='facultyMember'){
+                    window.location.href = '/'
+                }else{
+                    alert('You cannot login using this');
+                    window.location.href='/login-page'
+                }
             })
-            .catch((e) => {
-                console.log("ERROR");
-                console.log(e);
-            });
+            .catch((e) => console.log(e));
+      }
+
+    //   showFacultyUserData(){
+
+    //         const user=localStorage.getItem('user');
+    //         console.log(user);
+    //         this.setState({userType:user.role})
+    //         console.log(this.state.userType)
+    //         if(this.state.userType === 'student'){
+    //             window.location.href = '/student'
+    //         }else if(this.state.userType ==='facultyMember'){
+    //             window.location.href = '/'
+    //         }else{
+    //             alert('You cannot login using this');
+    //             window.location.href='/login-page'
+    //         }
+    //   }
+
+      async componentDidMount(){
+
+        // const params = new URLSearchParams(window.location.search)
+        // const e = params.getAll('e')[0];
+        console.log(localStorage.getItem('user'));
+        if(localStorage.getItem('user')===null){
+            await this.getFacultyUserData();
         }
+        else{
+            window.location.href='/'
+        }
+         
+            
+            // await this.showFacultyUserData();
+
+
+        // if(params.getAll('e')[0]){
+
+        //     axios.post(`http://10.22.0.73/api/v_IMGPersonalInfoFC/100384/${e}`)
+        //     .then((response) => {
+        //         console.log(response.data);
+        //         this.getUserData();
+                
+        //     })
+        //     .catch((e) => {
+        //         console.log("ERROR");
+        //         console.log(e);
+        //     });
+        // }
       }
      
       render() {

@@ -80,8 +80,8 @@ class Dashboard extends Component {
         const user = JSON.parse(localStorage.getItem('user'))
         console.log(user)
         const params = new URLSearchParams(window.location.search)
-        console.log(window.location.search);
         const q = params.getAll('q')[0]
+        console.log(q);
         var r = '1';
         if(q==='1'){
             r='2'
@@ -92,7 +92,7 @@ class Dashboard extends Component {
                 <Container fluid>
                 <Breadcrumb>
                     <BreadcrumbItem>LHC-{q} Bookings Dashboard:{' '} <br />
-                        <a href={`/LHC/dashboard?q=${r}`}>
+                        <a href={`/dashboard?q=${r}`}>
                             Visit LHC-{r} Dashboard
                         </a>
                     </BreadcrumbItem>
