@@ -133,10 +133,10 @@ export function getFacultyData(req,res, next){
 
   // var token = req.headers.authorization;
   // console.log("headers token is: " + token);
-  console.log(`http://10.22.0.73/api/v_IMGPersonalInfoFC/${req.query.e}`)
+  console.log(`http://testacad.iitr.ac.in/api/v_IMGPersonalInfoFC/${req.query.e}`)
 
   axios
-    .get(`http://10.22.0.73/api/v_IMGPersonalInfoFC/${req.query.e}`, {
+    .get(`http://testacad.iitr.ac.in/api/v_IMGPersonalInfoFC/${req.query.e}`, {
       headers: {
         token: "qazmlp1010",
       }
