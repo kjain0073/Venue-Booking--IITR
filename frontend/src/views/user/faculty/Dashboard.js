@@ -141,6 +141,7 @@ class Dashboard extends Component {
                                         onClickDay={this.handleClickDay}
                                         onChange={this.handleOnChange}
                                         value={this.state.date}
+                                        tileDisabled={({activeStartDate, date, view }) => date.getDay() === 0} 
                                     />
                                 </Card>
                             {/* </Col> */}
